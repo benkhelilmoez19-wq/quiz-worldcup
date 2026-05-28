@@ -3,24 +3,54 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Les attributs qui peuvent être remplis massivement.
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'address',
+        'nationality',
+    ];
+
+    /**
+     * Les attributs qui doivent être cachés pour la sérialisation (JSON).
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Récupérer tous les scores (résultats) du joueur.
+     */
+    public function results(): HasMany
+    {
+        return $this->hasMany(Result::class);
+    }
+
+    /**
+     * Vérifier si l'utilisateur est un administrateur.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Le cast des attributs.
      */
     protected function casts(): array
     {

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema; // Ne pas oublier d'ajouter cette ligne !
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Ajoute cette ligne pour corriger l'erreur de longueur de clé
+        Schema::defaultStringLength(191);
     }
 }
